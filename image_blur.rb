@@ -10,6 +10,14 @@ class Image
     end
   end
 
+  def blur_image!(dist)
+    dist.times do
+      blur!
+    end
+  end
+
+  private
+
   def blur!
     known_ones = [];
     @image.each_with_index do |row, i|      
@@ -19,22 +27,24 @@ class Image
     end
 
     known_ones.each do |c|                  # using known ones change zeroes around them
-      @image[c[0] - 1][c[1]] = 1 unless c[0] - 1 <= 0                   #above case
-      @image[c[0] + 1][c[1]] = 1 unless c[0] + 1 >= @image.length - 1   #below case
-      @image[c[0]][c[1] - 1] = 1 unless c[1] - 1 <= 0                   #left case
-      @image[c[0]][c[1] + 1] = 1 unless c[1] + 1 >= @image[c[0]].length #right case
+      @image[c[0] - 1][c[1]] = 1 unless c[0] - 1 < 0                   #above case
+      @image[c[0] + 1][c[1]] = 1 unless c[0] + 1 > @image.length - 1   #below case
+      @image[c[0]][c[1] - 1] = 1 unless c[1] - 1 < 0                   #left case
+      @image[c[0]][c[1] + 1] = 1 unless c[1] + 1 > @image[c[0]].length - 1 #right case
     end
   end
 end
 
 image = Image.new([
-  [1, 0, 0, 0, 0],
-  [0, 1, 0, 0, 0],
-  [0, 0, 0, 0, 1],
-  [0, 0, 0, 0, 0],
-  [1, 0, 0, 1, 0]
+  [0, 0, 0, 0, 0, 1, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 1, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0],
+  [1, 0, 0, 0, 0, 0, 0]
 ])
 image.output_image
 puts "~~~~~"
-image.blur!
+image.blur_image!(2)
 image.output_image
